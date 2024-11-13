@@ -16,7 +16,7 @@ public actor APIServiceManager {
         self.networkService = networkService
     }
     
-    // Method to build the request and return it synchronously
+    // Public method to build a standard request
     public func buildRequest(
         to url: URL,
         withMethod method: RequestType,
@@ -30,5 +30,27 @@ public actor APIServiceManager {
             headers: headers,
             parameters: parameters
         )
+    }
+    
+    // Public method to upload an image using multipart/form-data
+    public func uploadImage(
+        to url: URL,
+        image: Data,
+        imageName: String,
+        parameters: [String: String]? = nil,
+        headers: [String: String] = [:]
+    ) async -> Result<Data, NetworkError> {
+        
+        // Use ImageUploadHelper to create a multipart/form-data request
+        let request = ImageUploadHelper.createMultipartRequest(
+            url: url,
+            image: image,
+            imageName: imageName,
+            parameters: parameters,
+            headers: headers
+        )
+        
+        // Perform the upload request using networkService
+        return await networkService.performNetworkRequest(request: request)
     }
 }

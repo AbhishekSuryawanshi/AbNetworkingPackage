@@ -8,7 +8,7 @@
 import Foundation
 
 @available(iOS 13.0.0, *)
-public class NetworkService {
+public final class NetworkService: @unchecked Sendable {
     private let session: URLSessionProtocol
     
     public init(session: URLSessionProtocol = URLSession.shared) {
