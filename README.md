@@ -190,3 +190,8 @@ Contributions are welcome! If you’d like to contribute to `AbNetworkingPackage
 3. Make your changes and commit them with clear messages.
 4. Push your changes to your forked repository.
 5. Create a pull request to the main repository.
+
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
