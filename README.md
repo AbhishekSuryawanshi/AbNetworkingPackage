@@ -61,3 +61,132 @@ After installing, import `AbNetworkingPackage` in the files where you plan to us
 
 ```swift
 import AbNetworkingPackage
+```
+
+### Example Usage
+
+#### Step 1: Initialize `APIServiceManager` and `NetworkService`
+
+```swift
+let networkService = NetworkService() // Initialize the network service
+let apiServiceManager = APIServiceManager(networkService: networkService) // Inject network service into API manager
+```
+
+#### Step 2: Make a GET Request
+
+Let’s say you want to fetch posts from the [JSONPlaceholder API](https://jsonplaceholder.typicode.com/posts).
+
+```swift
+import Foundation
+
+func fetchPosts() async {
+    let url = URL(string: "https://jsonplaceholder.typicode.com/posts")!
+
+    // Build the request
+    let request = await apiServiceManager.buildRequest(to: url, withMethod: .GET)
+
+    // Perform the network request
+    let result = await networkService.performNetworkRequest(request: request)
+
+    // Handle the result
+    switch result {
+    case .success(let data):
+        do {
+            let posts = try JSONDecoder().decode([Post].self, from: data)
+            print("Fetched posts:", posts)
+        } catch {
+            print("Failed to decode JSON:", error)
+        }
+    case .failure(let error):
+        print("API call failed with error:", error.localizedDescription)
+    }
+}
+```
+
+#### Step 3: Define a Model for Decoding JSON
+
+To decode the JSON response, create a `Post` struct:
+
+```swift
+struct Post: Codable {
+    let userId: Int
+    let id: Int
+    let title: String
+    let body: String
+}
+```
+
+### POST Request Example
+
+To make a `POST` request with JSON parameters, you can use a similar approach:
+
+```swift
+func createPost() async {
+    let url = URL(string: "https://jsonplaceholder.typicode.com/posts")!
+    
+    // Parameters for the POST request
+    let parameters: [String: Any] = [
+        "title": "foo",
+        "body": "bar",
+        "userId": 1
+    ]
+    
+    // Build the POST request
+    let request = await apiServiceManager.buildRequest(to: url, withMethod: .POST, parameters: parameters)
+
+    // Perform the network request
+    let result = await networkService.performNetworkRequest(request: request)
+
+    // Handle the result
+    switch result {
+    case .success(let data):
+        if let response = String(data: data, encoding: .utf8) {
+            print("Response:", response)
+        }
+    case .failure(let error):
+        print("API call failed with error:", error.localizedDescription)
+    }
+}
+```
+
+## Error Handling
+
+`AbNetworkingPackage` provides detailed error handling through the `NetworkError` enum, allowing you to identify specific issues.
+
+Example of handling errors:
+
+```swift
+switch error {
+case .invalidURL:
+    print("The URL provided is invalid.")
+case .noData:
+    print("No data received from the server.")
+case .requestFailed(let message):
+    print("Request failed with message:", message)
+default:
+    print("An unknown error occurred.")
+}
+```
+
+## Testing
+
+The package includes tests for `APIServiceManager` and `NetworkService`, covering both success and failure cases.
+
+To run the tests:
+
+1. Clone the repository.
+2. Open Terminal, navigate to the repository’s root, and run:
+   
+   ```bash
+   swift test
+   ```
+
+## Contributing
+
+Contributions are welcome! If you’d like to contribute to `AbNetworkingPackage`, follow these steps:
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Make your changes and commit them with clear messages.
+4. Push your changes to your forked repository.
+5. Create a pull request to the main repository.
