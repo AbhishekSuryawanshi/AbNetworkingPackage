@@ -149,6 +149,45 @@ func createPost() async {
 }
 ```
 
+### Image Upload (Multipart Form)
+
+With the `uploadImage` method in `APIServiceManager`, you can easily upload images using `multipart/form-data`.
+
+```swift
+import AbNetworkingPackage
+
+let networkService = NetworkService()
+let apiServiceManager = APIServiceManager(networkService: networkService)
+
+func uploadSampleImage() async {
+    let url = URL(string: "https://example.com/upload")!
+    guard let imageData = UIImage(named: "sampleImage")?.jpegData(compressionQuality: 0.8) else {
+        print("Failed to get image data")
+        return
+    }
+    let imageName = "uploaded_image.jpg"
+    let parameters = ["userId": "12345", "description": "Sample image upload"]
+    let headers = ["Authorization": "Bearer YOUR_ACCESS_TOKEN"]
+
+    let result = await apiServiceManager.uploadImage(
+        to: url,
+        image: imageData,
+        imageName: imageName,
+        parameters: parameters,
+        headers: headers
+    )
+
+    switch result {
+    case .success(let data):
+        if let responseString = String(data: data, encoding: .utf8) {
+            print("Upload successful! Server response:", responseString)
+        }
+    case .failure(let error):
+        print("Image upload failed with error:", error.localizedDescription)
+    }
+}
+```
+
 ## Error Handling
 
 `AbNetworkingPackage` provides detailed error handling through the `NetworkError` enum, allowing you to identify specific issues.
