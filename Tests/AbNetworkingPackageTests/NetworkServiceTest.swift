@@ -70,7 +70,7 @@ final class NetworkServiceTests: XCTestCase {
         case .failure(let error):
             // Check that the error is 'requestFailed' and contains the correct error code
             if case .requestFailed(let errorMessage) = error {
-                let expectedErrorCode = URLError.cannotFindHost.rawValue
+                _ = URLError.cannotFindHost.rawValue
                 XCTAssertTrue(errorMessage.contains("A server with the specified hostname could not be found.") ||
                               errorMessage.contains("The operation couldn’t be completed."),
                               "Expected error message indicating cannot find host")
