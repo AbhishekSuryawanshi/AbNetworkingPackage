@@ -188,6 +188,11 @@ func uploadSampleImage() async {
 }
 ```
 
+## Important Notes
+
+•	Multipart Request: The ImageUploadHelper.createMultipartRequest function constructs a multipart/form-data request for image uploads.
+•	Custom Headers and Parameters: You can pass additional parameters and headers as needed for the upload.
+
 ## Error Handling
 
 `AbNetworkingPackage` provides detailed error handling through the `NetworkError` enum, allowing you to identify specific issues.
